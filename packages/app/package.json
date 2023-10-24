@@ -106,6 +106,7 @@
     "zen-observable": "^0.10.0"
   },
   "devDependencies": {
+    "@andreatp/test-kiota-wasm": "file:.yalc/@andreatp/test-kiota-wasm",
     "@backstage/test-utils": "workspace:^",
     "@playwright/test": "^1.32.3",
     "@testing-library/dom": "^9.0.0",
@@ -116,14 +117,17 @@
     "@types/react": "*",
     "@types/react-dom": "*",
     "@types/zen-observable": "^0.8.0",
-    "cross-env": "^7.0.0"
+    "copy-files-from-to": "^3.9.0",
+    "cross-env": "^7.0.0",
+    "rimraf": "^5.0.5"
   },
   "scripts": {
     "start": "backstage-cli package start",
     "build": "backstage-cli package build",
     "clean": "backstage-cli package clean",
     "test": "backstage-cli package test",
-    "lint": "backstage-cli package lint"
+    "lint": "backstage-cli package lint",
+    "postinstall": "rimraf ./public/kiota-wasm && copy-files-from-to"
   },
   "browserslist": {
     "production": [
@@ -137,6 +141,20 @@
       "last 1 safari version"
     ]
   },
+  "copyFiles": [
+    {
+      "from": "node_modules/@andreatp/test-kiota-wasm/dist/*",
+      "to": "public/kiota-wasm"
+    },
+    {
+      "from": "node_modules/@andreatp/test-kiota-wasm/dist/managed/*",
+      "to": "public/kiota-wasm/managed"
+    },
+    {
+      "from": "node_modules/@andreatp/test-kiota-wasm/dist/supportFiles/*",
+      "to": "public/kiota-wasm/supportFiles"
+    }
+  ],
   "files": [
     "dist"
   ],

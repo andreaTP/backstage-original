@@ -139,6 +139,27 @@ export type OpenApiDefinitionProps = {
   requestInterceptor?: (req: any) => any | Promise<any>;
 };
 
+const generateClientAndDownload = async (language: string, spec: string) => {
+  const { generate } = await import(
+    /* webpackIgnore: true */ './kiota-wasm/main.js'
+  );
+  const content = await generate(
+    spec,
+    language,
+    'ApiClient',
+    'com.acme',
+    '',
+    '',
+  );
+
+  setTimeout(() => {
+    const link = document.createElement('a');
+    link.href = `data:text/plain;base64,${content}`;
+    link.download = `client-${language.toLocaleLowerCase('en-US')}.zip`;
+    link.click();
+  }, 50);
+};
+
 export const OpenApiDefinition = ({
   definition,
   requestInterceptor,
@@ -156,6 +177,10 @@ export const OpenApiDefinition = ({
 
   return (
     <div className={classes.root}>
+      <Button
+        onClick={async () => generateClientAndDownload('Java', def)}
+        test="Generate a bespoke Java Kiota client"
+      />
       <SwaggerUI
         spec={def}
         url=""
